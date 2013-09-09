@@ -1,2 +1,6 @@
 *~
 *.swp
+
+/bin/*
+/deps
+/pp/modules/*

@@ -2,6 +2,7 @@ bin                   = "#{ Dir.pwd }/bin"
 man                   = "#{ Dir.pwd }/pp/manifests"
 mod                   = "#{ Dir.pwd }/pp/modules"
 
+ENV['FACTER_TESTDIR'] = ENV['TESTDIR']
 ENV['FACTER_pp_bin']  = bin
 pp_args               = "--modulepath #{mod} -v"
 
@@ -30,9 +31,15 @@ task 'stow:noop:all' do
   sh "stow -n #{st_args} #{stows*' '}"
 end
 
-desc 'Apply'
+desc 'Apply site.pp'
 task :apply do
   sh "puppet apply #{pp_args} #{man}/site.pp"
+end
+
+desc 'Apply test.pp'
+task 'apply:test' do
+  raise 'no $TESTDIR' if (ENV['TESTDIR'] || '').empty?
+  sh "puppet apply #{pp_args} #{man}/test.pp"
 end
 
 desc 'Apply file'
@@ -41,9 +48,15 @@ task 'apply:file' do
   sh "puppet apply #{pp_args} #{ENV['FILE']}"
 end
 
-desc 'Noop'
+desc 'Noop site.pp'
 task :noop do
   sh "puppet apply --noop #{pp_args} #{man}/site.pp"
+end
+
+desc 'Noop test.pp'
+task 'noop:test' do
+  raise 'no $TESTDIR' if (ENV['TESTDIR'] || '').empty?
+  sh "puppet apply --noop #{pp_args} #{man}/test.pp"
 end
 
 desc 'Noop file'

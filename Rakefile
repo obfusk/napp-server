@@ -9,6 +9,10 @@ pp_args               = "--modulepath #{mod} -v"
 stows                 = Dir['stow/*'].map { |x| File.basename x }
 st_args               = '-vv -d stow'
 
+cuke                  = ENV['CUKE']
+
+# --
+
 desc 'Stow'
 task :stow do
   raise 'no $PKG' if (ENV['PKG'] || '').empty?
@@ -30,6 +34,8 @@ desc 'Stow noop all'
 task 'stow:noop:all' do
   sh "stow -n #{st_args} #{stows*' '}"
 end
+
+# --
 
 desc 'Apply site.pp'
 task :apply do
@@ -65,10 +71,41 @@ task 'noop:file' do
   sh "puppet apply --noop #{pp_args} #{ENV['FILE']}"
 end
 
+# --
+
+desc 'Run cucumber'
+task :cuke do
+  sh "cucumber -fprogress #{cuke}"
+end
+
+desc 'Run cucumber strictly'
+task 'cuke:strict' do
+  sh "cucumber -fprogress -S #{cuke}"
+end
+
+desc 'Run cucumber verbosely'
+task 'cuke:verbose' do
+  sh "cucumber #{cuke}"
+end
+
+desc 'Run cucumber verbosely, view w/ less'
+task 'cuke:less' do
+  sh "cucumber -c #{cuke} | less -R"
+end
+
+desc 'Cucumber step defs'
+task 'cuke:steps' do
+  sh 'cucumber -c -fstepdefs | less -R'
+end
+
+# --
+
 desc 'Check'
 task :check do
   sh "find -L pp/ -name '*.pp' | xargs -n 1 -t puppet parser validate"
 end
+
+# --
 
 desc 'Sync'
 task :sync do

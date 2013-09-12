@@ -1,6 +1,11 @@
 *~
 *.swp
 
-/bin/*
 /deps
+/tmp
+
+/bin/*
 /pp/modules/*
+
+/features/*
+!/features/support

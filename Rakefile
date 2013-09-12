@@ -3,15 +3,8 @@ require 'tmpdir'
 # --
 
 def w_testdir(&b)                                               # {{{1
-  if (ENV['TESTDIR'] || '').empty?
-    Dir.mktempdir do |dir|
-      ENV['FACTER_TESTDIR'] = dir
-      b[]
-    end
-  else
-    ENV['FACTER_TESTDIR'] = ENV['TESTDIR']
-    b[]
-  end
+  f = ->(d) { ENV['TESTDIR'] = ENV['FACTER_TESTDIR'] = d; b[] }
+  (ENV['TESTDIR']||'').empty? ? Dir.mktmpdir(&f) : f[ENV['TESTDIR']]
 end                                                             # }}}1
 
 # --
@@ -26,7 +19,8 @@ pp_args               = "--modulepath #{mod} -v"
 stows                 = Dir['stow/*'].map { |x| File.basename x }
 st_args               = '-vv -d stow'
 
-cuke                  = ENV['CUKE']
+cuke                  = (ENV['CUKE']||'').empty? ? 'features/*' : ENV['CUKE']
+cu_args               = '-r features'
 
 # --
 
@@ -69,7 +63,7 @@ end
 desc 'Apply file'
 task 'apply:file' do
   raise 'no $FILE' if (ENV['FILE'] || '').empty?
-  sh "puppet apply #{pp_args} #{ENV['FILE']}"
+  sh "puppet apply #{pp_args} pp/#{ENV['FILE']}"
 end
 
 desc 'Noop site.pp'
@@ -87,7 +81,7 @@ end
 desc 'Noop file'
 task 'noop:file' do
   raise 'no $FILE' if (ENV['FILE'] || '').empty?
-  sh "puppet apply --noop #{pp_args} #{ENV['FILE']}"
+  sh "puppet apply --noop #{pp_args} pp/#{ENV['FILE']}"
 end
 
 # --
@@ -95,34 +89,34 @@ end
 desc 'Run cucumber'
 task :cuke do
   w_testdir do
-    sh "cucumber -fprogress #{cuke}"
+    sh "cucumber -fprogress #{cu_args} #{cuke}"
   end
 end
 
 desc 'Run cucumber strictly'
 task 'cuke:strict' do
   w_testdir do
-    sh "cucumber -fprogress -S #{cuke}"
+    sh "cucumber -fprogress -S #{cu_args} #{cuke}"
   end
 end
 
 desc 'Run cucumber verbosely'
 task 'cuke:verbose' do
   w_testdir do
-    sh "cucumber #{cuke}"
+    sh "cucumber #{cu_args} #{cuke}"
   end
 end
 
 desc 'Run cucumber verbosely, view w/ less'
 task 'cuke:less' do
   w_testdir do
-    sh "cucumber -c #{cuke} | less -R"
+    sh "cucumber -c #{cu_args} #{cuke} | less -R"
   end
 end
 
 desc 'Cucumber step defs'
 task 'cuke:steps' do
-  sh 'cucumber -c -fstepdefs | less -R'
+  sh "cucumber -c -fstepdefs #{cu_args} | less -R"
 end
 
 # --

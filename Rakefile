@@ -1,8 +1,25 @@
+require 'tmpdir'
+
+# --
+
+def w_testdir(&b)                                               # {{{1
+  if (ENV['TESTDIR'] || '').empty?
+    Dir.mktempdir do |dir|
+      ENV['FACTER_TESTDIR'] = dir
+      b[]
+    end
+  else
+    ENV['FACTER_TESTDIR'] = ENV['TESTDIR']
+    b[]
+  end
+end                                                             # }}}1
+
+# --
+
 bin                   = "#{ Dir.pwd }/bin"
 man                   = "#{ Dir.pwd }/pp/manifests"
 mod                   = "#{ Dir.pwd }/pp/modules"
 
-ENV['FACTER_TESTDIR'] = ENV['TESTDIR']
 ENV['FACTER_pp_bin']  = bin
 pp_args               = "--modulepath #{mod} -v"
 
@@ -44,8 +61,9 @@ end
 
 desc 'Apply test.pp'
 task 'apply:test' do
-  raise 'no $TESTDIR' if (ENV['TESTDIR'] || '').empty?
-  sh "puppet apply #{pp_args} #{man}/test.pp"
+  w_testdir do
+    sh "puppet apply #{pp_args} #{man}/test.pp"
+  end
 end
 
 desc 'Apply file'
@@ -61,8 +79,9 @@ end
 
 desc 'Noop test.pp'
 task 'noop:test' do
-  raise 'no $TESTDIR' if (ENV['TESTDIR'] || '').empty?
-  sh "puppet apply --noop #{pp_args} #{man}/test.pp"
+  w_testdir do
+    sh "puppet apply --noop #{pp_args} #{man}/test.pp"
+  end
 end
 
 desc 'Noop file'
@@ -75,22 +94,30 @@ end
 
 desc 'Run cucumber'
 task :cuke do
-  sh "cucumber -fprogress #{cuke}"
+  w_testdir do
+    sh "cucumber -fprogress #{cuke}"
+  end
 end
 
 desc 'Run cucumber strictly'
 task 'cuke:strict' do
-  sh "cucumber -fprogress -S #{cuke}"
+  w_testdir do
+    sh "cucumber -fprogress -S #{cuke}"
+  end
 end
 
 desc 'Run cucumber verbosely'
 task 'cuke:verbose' do
-  sh "cucumber #{cuke}"
+  w_testdir do
+    sh "cucumber #{cuke}"
+  end
 end
 
 desc 'Run cucumber verbosely, view w/ less'
 task 'cuke:less' do
-  sh "cucumber -c #{cuke} | less -R"
+  w_testdir do
+    sh "cucumber -c #{cuke} | less -R"
+  end
 end
 
 desc 'Cucumber step defs'

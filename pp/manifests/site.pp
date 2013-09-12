@@ -9,9 +9,7 @@
 #
 # --                                                            ; }}}1
 
-import 'path.pp'
-import 'aptitude.pp'
-import 'packages/common.pp'
+import 'common.pp'
 
 node 'vm-pp' {
   # TODO

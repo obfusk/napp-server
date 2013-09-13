@@ -1,6 +1,6 @@
 # --                                                            ; {{{1
 #
-# File        : modules/site/path.pp
+# File        : manifests/path.pp
 # Maintainer  : Felix C. Stegerman <flx@obfusk.net>
 # Date        : 2013-09-13
 #
@@ -9,13 +9,11 @@
 #
 # --                                                            ; }}}1
 
-class site::path {
-  Exec {
-    path => [
-      $::pp_bin, '/usr/local/sbin', '/usr/local/bin',
-      '/usr/sbin', '/usr/bin', '/sbin', '/bin'
-    ]
-  }
+Exec {
+  path => [
+    $::pp_bin, '/usr/local/sbin', '/usr/local/bin',
+    '/usr/sbin', '/usr/bin', '/sbin', '/bin'
+  ]
 }
 
 # vim: set tw=70 sw=2 sts=2 et fdm=marker :

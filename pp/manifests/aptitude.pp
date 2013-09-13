@@ -1,6 +1,6 @@
 # --                                                            ; {{{1
 #
-# File        : modules/site/common.pp
+# File        : manifests/aptitude.pp
 # Maintainer  : Felix C. Stegerman <flx@obfusk.net>
 # Date        : 2013-09-13
 #
@@ -9,10 +9,9 @@
 #
 # --                                                            ; }}}1
 
-class site::common {
-  include site::path
-  include site::aptitude
-  include site::packages::common
+Package {
+  ensure    => installed,
+  provider  => 'aptitude',
 }
 
 # vim: set tw=70 sw=2 sts=2 et fdm=marker :

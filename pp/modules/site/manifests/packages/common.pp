@@ -1,6 +1,6 @@
 # --                                                            ; {{{1
 #
-# File        : modules/site/packages/common.pp
+# File        : modules/site/manifests/packages/common.pp
 # Maintainer  : Felix C. Stegerman <flx@obfusk.net>
 # Date        : 2013-09-13
 #
@@ -9,7 +9,7 @@
 #
 # --                                                            ; }}}1
 
-class site::package::common {
+class site::packages::common {
   package { ['git', 'curl']: }
 }
 

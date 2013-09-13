@@ -3,9 +3,13 @@ require 'tmpdir'
 # --
 
 def w_testdir(&b)                                               # {{{1
-  f = ->(d) { ENV['TESTDIR'] = ENV['FACTER_TESTDIR'] = d; b[] }
+  f = ->(d) { ENV['TESTDIR'] = ENV['FACTER_testdir'] = d; b[] }
   (ENV['TESTDIR']||'').empty? ? Dir.mktmpdir(&f) : f[ENV['TESTDIR']]
 end                                                             # }}}1
+
+def inc(file)
+  %Q{-e 'import "pp/manifests/common.pp"\nimport "pp/#{file}"'}
+end
 
 # --
 
@@ -63,7 +67,7 @@ end
 desc 'Apply file'
 task 'apply:file' do
   raise 'no $FILE' if (ENV['FILE'] || '').empty?
-  sh "puppet apply #{pp_args} pp/#{ENV['FILE']}"
+  sh "puppet apply #{pp_args} #{inc ENV['FILE']}"
 end
 
 desc 'Noop site.pp'
@@ -81,7 +85,7 @@ end
 desc 'Noop file'
 task 'noop:file' do
   raise 'no $FILE' if (ENV['FILE'] || '').empty?
-  sh "puppet apply --noop #{pp_args} pp/#{ENV['FILE']}"
+  sh "puppet apply --noop #{pp_args} #{inc ENV['FILE']}"
 end
 
 # --

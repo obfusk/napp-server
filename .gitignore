@@ -5,7 +5,9 @@
 /tmp
 
 /bin/*
+
 /pp/modules/*
+!/pp/modules/site
 
 /features/*
 !/features/support

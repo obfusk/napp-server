@@ -13,8 +13,6 @@ bin                   = "#{ Dir.pwd }/bin"
 man                   = "#{ Dir.pwd }/pp/manifests"
 mod                   = "#{ Dir.pwd }/pp/modules"
 
-com                   = "#{man}/common.pp"
-
 ENV['FACTER_pp_bin']  = bin
 pp_args               = "--modulepath #{mod} -v"
 
@@ -65,7 +63,7 @@ end
 desc 'Apply file'
 task 'apply:file' do
   raise 'no $FILE' if (ENV['FILE'] || '').empty?
-  sh "puppet apply #{pp_args} #{com} pp/#{ENV['FILE']}"
+  sh "puppet apply #{pp_args} pp/#{ENV['FILE']}"
 end
 
 desc 'Noop site.pp'
@@ -83,7 +81,7 @@ end
 desc 'Noop file'
 task 'noop:file' do
   raise 'no $FILE' if (ENV['FILE'] || '').empty?
-  sh "puppet apply --noop #{pp_args} #{com} pp/#{ENV['FILE']}"
+  sh "puppet apply --noop #{pp_args} pp/#{ENV['FILE']}"
 end
 
 # --

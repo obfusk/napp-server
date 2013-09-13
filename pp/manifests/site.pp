@@ -2,14 +2,14 @@
 #
 # File        : manifests/site.pp
 # Maintainer  : Felix C. Stegerman <flx@obfusk.net>
-# Date        : 2013-09-12
+# Date        : 2013-09-13
 #
 # Copyright   : Copyright (C) 2013  Felix C. Stegerman
 # Licence     : GPLv2 or EPLv1
 #
 # --                                                            ; }}}1
 
-import 'common.pp'
+include site::common
 
 node 'vm-pp' {
   # TODO

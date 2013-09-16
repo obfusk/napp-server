@@ -2,7 +2,7 @@
 
     File        : README.md
     Maintainer  : Felix C. Stegerman <flx@obfusk.net>
-    Date        : 2013-09-09
+    Date        : 2013-09-16
 
     Copyright   : Copyright (C) 2013  Felix C. Stegerman
 
@@ -14,6 +14,22 @@
   napp-server - napp server template
 
   ...
+
+[]: }}}1
+
+## Tests
+[]: {{{1
+
+    $ rake cuke
+
+[]: }}}1
+
+## TODO
+[]: {{{1
+
+  * build all components!
+  * more tests/docs?
+  * ...
 
 []: }}}1
 

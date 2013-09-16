@@ -20,7 +20,8 @@
 ## Tests
 []: {{{1
 
-    $ rake cuke
+    $ rake check  # check syntax
+    $ rake cuke   # run cucumber features
 
 []: }}}1
 
